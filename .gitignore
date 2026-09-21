@@ -1,16 +1,21 @@
-# Python / Virtualenv
 __pycache__/
 *.py[cod]
 *$py.class
 venv/
 .venv/
+env/
 .env
 
-# IDEs
-.idea/
-.vscode/
-
-# Build & Logs
-target/
 *.log
+metastore_db/
+derby.log
+checkpoint/
+spark-warehouse/
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
 .DS_Store
+Thumbs.db
