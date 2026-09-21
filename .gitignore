@@ -1,0 +1,16 @@
+# Python / Virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# IDEs
+.idea/
+.vscode/
+
+# Build & Logs
+target/
+*.log
+.DS_Store
