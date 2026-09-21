@@ -33,6 +33,9 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: flink-jobmanager
+    volumes:
+      - ./scripts/flink/lib:/opt/flink/usrlib
+      - ./scripts/flink/submit.sql:/opt/flink/submit.sql
 
   flink-taskmanager:
     image: flink:1.17-java11
@@ -45,6 +48,8 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: flink-jobmanager
         taskmanager.numberOfTaskSlots: 4
+    volumes:
+      - ./scripts/flink/lib:/opt/flink/usrlib
 
   redis:
     image: redis:7-alpine
@@ -94,3 +99,17 @@ services:
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_TOPIC: ecommerce-events
+
+  flink-processor:
+    image: ecommerce-flink:latest
+    container_name: flink-processor
+    depends_on:
+      - kafka
+      - postgres
+      - flink-jobmanager
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ecommerce_analytics
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
