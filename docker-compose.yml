@@ -78,6 +78,8 @@ services:
     ports:
       - "8080:8080"
       - "7077:7077"
+    volumes:
+      - ./scripts/spark:/opt/spark-apps
 
   spark-worker:
     image: apache/spark:3.5.0
@@ -127,6 +129,10 @@ services:
   airflow-webserver:
     image: apache/airflow:2.7.1-python3.10
     container_name: airflow_webserver
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    user: "0"
     restart: always
     depends_on:
       - postgres
@@ -134,10 +140,12 @@ services:
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgres:root@postgres:5432/ecommerce_analytics
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - DOCKER_API_VERSION=1.44
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
     ports:
       - "8085:8080"
     command: >
@@ -148,6 +156,10 @@ services:
   airflow-scheduler:
     image: apache/airflow:2.7.1-python3.10
     container_name: airflow_scheduler
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    user: "0"
     restart: always
     depends_on:
       - airflow-webserver
@@ -155,10 +167,12 @@ services:
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgres:root@postgres:5432/ecommerce_analytics
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - DOCKER_API_VERSION=1.44
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
     command: airflow scheduler
 
   minio:
