@@ -1,10 +1,10 @@
-E-Commerce Big Data Analytics Platform
+# E-Commerce Big Data Analytics Platform
 
-项目简介
+## 项目简介
 
 处理与分析电商实时及定时数据的工程项目。平台收集用户行为事件，提供实时数据监控，并完成 RFM 客户分群分析。
 
-核心组件
+## 核心组件
 
 Generator (Python)
 持续生成模拟用户事件与交易数据的服务。
@@ -30,9 +30,9 @@ Apache Airflow 与 PySpark
 Telegram Alerts
 任务异常监控通知系统，在 Airflow Task 执行失败或重试时向 Telegram Bot 实时发送告警。
 
-部署与运行
+## 部署与运行
 
-# 先决条件
+先决条件
 
 首次构建和运行 Docker 容器之前，需要将所需的 JAR 库下载到 `scripts/spark/` 文件夹：
 
@@ -43,7 +43,7 @@ curl -fSL [https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12
 2. PostgreSQL JDBC driver
 curl -fSL [https://jdbc.postgresql.org/download/postgresql-42.6.0.jar](https://jdbc.postgresql.org/download/postgresql-42.6.0.jar) -O
 
-# 设置 Telegram 通知（可选）
+## 设置 Telegram 通知（可选）
 
 要在 Telegram 中接收有关 Airflow DAG 故障和执行状态的通知，请执行以下操作：
 
@@ -57,23 +57,23 @@ TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
 
 TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"
 
-# 克隆与启动
+## 克隆与启动
 
 git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git
 cd ecommerce-bigdata-analytics
 docker compose up -d --build
 
-强制刷新 Airflow DAG
+## 强制刷新 Airflow DAG
 
 若 Web 界面未显示 DAG：
 
 docker exec -it airflow_webserver airflow dags reserialize
 
-手动触发任务
+## 手动触发任务
 
 docker exec -it airflow_webserver airflow dags trigger rfm_segmentation_daily
 
-访问入口
+## 访问入口
 
 Airflow: http://localhost:8085
 Grafana: http://localhost:3000
