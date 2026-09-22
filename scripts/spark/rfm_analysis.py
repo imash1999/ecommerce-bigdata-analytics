@@ -12,21 +12,42 @@ def main():
 
     spark = SparkSession.builder \
         .appName("EcommerceRFMAnalysis") \
+        .config("spark.hadoop.fs.s3a.endpoint", "http://ecommerce-minio:9000") \
+        .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
+        .config("spark.hadoop.fs.s3a.secret.key", "minioadminpassword") \
+        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config("spark.sql.files.ignoreMissingFiles", "true") \
         .getOrCreate()
 
     spark.sparkContext.setLogLevel("WARN")
 
-    print("--> Чтение raw_events из PostgreSQL...")
-    events_df = spark.read \
-        .format("jdbc") \
-        .option("url", jdbc_url) \
-        .option("dbtable", "raw_events") \
-        .option("user", postgres_user) \
-        .option("password", postgres_password) \
-        .option("driver", "org.postgresql.Driver") \
-        .load()
+    print("--> Чтение raw_events из MinIO (Data Lake)...")
+    try:
+        events_df = spark.read.json("s3a://raw-events/events/*/*.json")
+    except Exception as e:
+        print(f"--> Ошибка при чтении из MinIO (папка пуста или бакет отсутствует): {e}")
+        spark.stop()
+        return
 
-    buys_df = events_df.filter(F.col("action") == "buy")
+    if events_df.rdd.isEmpty():
+        print("--> В MinIO нет файлов для обработки. Завершение.")
+        spark.stop()
+        return
+
+    events_df = events_df.withColumn("timestamp", F.to_timestamp(F.col("timestamp")))
+
+    print("--> Выполнение Data Quality Check...")
+    null_users = events_df.filter(F.col("user_id").isNull()).count()
+    invalid_prices = events_df.filter(F.col("price") < 0).count()
+
+    print(f"[DATA QUALITY] Битых пользователей (null): {null_users}, Отрицательных цен: {invalid_prices}")
+
+    if null_users > 0 or invalid_prices > 0:
+        spark.stop()
+        raise ValueError(f"Data Quality Failed! Null users: {null_users}, Invalid prices: {invalid_prices}")
+
+    buys_df = events_df.filter((F.col("action") == "buy") & F.col("user_id").isNotNull())
 
     if buys_df.count() == 0:
         print("--> Нет событий покупок 'buy'. Завершение.")
@@ -71,7 +92,7 @@ def main():
         .mode("overwrite") \
         .save()
 
-    print("--> RFM-анализ успешно завершен!")
+    print("--> RFM-анализ из MinIO успешно завершен!")
     spark.stop()
 
 if __name__ == "__main__":
