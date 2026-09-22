@@ -22,26 +22,26 @@ def main():
 
     spark.sparkContext.setLogLevel("WARN")
 
-    print("--> Чтение raw_events из MinIO (Data Lake)...")
+    print("从 MinIO（数据湖）读取原始事件")
     try:
         events_df = spark.read.json("s3a://raw-events/events/*/*.json")
     except Exception as e:
-        print(f"--> Ошибка при чтении из MinIO (папка пуста или бакет отсутствует): {e}")
+        print(f"从 MinIO 读取数据时出错(文件夹为空或存储桶缺失): {e}")
         spark.stop()
         return
 
     if events_df.rdd.isEmpty():
-        print("--> В MinIO нет файлов для обработки. Завершение.")
+        print("MinIO 没有文件需要处理。退出。")
         spark.stop()
         return
 
     events_df = events_df.withColumn("timestamp", F.to_timestamp(F.col("timestamp")))
 
-    print("--> Выполнение Data Quality Check...")
+    print("执行 Data Quality Check")
     null_users = events_df.filter(F.col("user_id").isNull()).count()
     invalid_prices = events_df.filter(F.col("price") < 0).count()
 
-    print(f"[DATA QUALITY] Битых пользователей (null): {null_users}, Отрицательных цен: {invalid_prices}")
+    print(f"[DATA QUALITY] 死用户（null）：{null_users}，负价格： {invalid_prices}")
 
     if null_users > 0 or invalid_prices > 0:
         spark.stop()
@@ -50,13 +50,13 @@ def main():
     buys_df = events_df.filter((F.col("action") == "buy") & F.col("user_id").isNotNull())
 
     if buys_df.count() == 0:
-        print("--> Нет событий покупок 'buy'. Завершение.")
+        print("没有“购买”事件 'buy' 完成")
         spark.stop()
         return
 
     max_timestamp = buys_df.select(F.max("timestamp")).collect()[0][0]
 
-    print("--> Расчет метрик R, F, M...")
+    print("计算 R, F, M")
     rfm_raw = buys_df.groupBy("user_id").agg(
         F.datediff(F.lit(max_timestamp), F.max("timestamp")).alias("recency_days"),
         F.count("event_id").alias("frequency"),
@@ -81,7 +81,7 @@ def main():
          .otherwise("Lost / Hibernating")
     ).withColumn("calculated_at", F.current_timestamp())
 
-    print("--> Запись результатов в PostgreSQL (user_rfm_segments)...")
+    print("将结果写入 PostgreSQL (user_rfm_segments)")
     rfm_segmented.write \
         .format("jdbc") \
         .option("url", jdbc_url) \
@@ -92,7 +92,7 @@ def main():
         .mode("overwrite") \
         .save()
 
-    print("--> RFM-анализ из MinIO успешно завершен!")
+    print("MinIO的RFM分析已成功完成！")
     spark.stop()
 
 if __name__ == "__main__":

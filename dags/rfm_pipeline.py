@@ -15,7 +15,7 @@ default_args = {
 with DAG(
     'rfm_segmentation_dag',
     default_args=default_args,
-    description='Регулярный запуск RFM-сегментации пользователей на PySpark',
+    description='在 PySpark 上定期运行 RFM 用户细分',
     schedule_interval='0 * * * *',
     catchup=False,
 ) as dag:

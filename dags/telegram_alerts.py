@@ -19,7 +19,6 @@ def send_telegram_failure_alert(context):
         f"<b>Error:</b> <code>{exception}</code>"
     )
 
-    # Используем IP-адрес Telegram API напрямую, чтобы обойти DNS-блокировку WSL
     url = f"https://149.154.167.220/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = json.dumps({
         "chat_id": TELEGRAM_CHAT_ID,
@@ -27,7 +26,6 @@ def send_telegram_failure_alert(context):
         "parse_mode": "HTML"
     }).encode('utf-8')
 
-    # Отключаем строгую проверку сертификата для IP-адреса
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
@@ -43,6 +41,6 @@ def send_telegram_failure_alert(context):
     
     try:
         urllib.request.urlopen(req, context=ctx, timeout=10)
-        print("Алерт успешно отправлен!")
+        print("警报已成功发送！")
     except Exception as e:
-        print(f"Ошибка отправки Telegram алерта: {e}")
+        print(f"发送 Telegram 提醒时出错： {e}")
