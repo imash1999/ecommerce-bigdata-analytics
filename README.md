@@ -32,6 +32,17 @@ Telegram Alerts
 
 部署与运行
 
+先决条件
+
+首次构建和运行 Docker 容器之前，需要将所需的 JAR 库下载到 `scripts/spark/` 文件夹：
+
+# 1. AWS / S3 (MinIO) connector
+curl -fSL [https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar](https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar) -O
+curl -fSL [https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar](https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar) -O
+
+# 2. PostgreSQL JDBC driver
+curl -fSL [https://jdbc.postgresql.org/download/postgresql-42.6.0.jar](https://jdbc.postgresql.org/download/postgresql-42.6.0.jar) -O
+
 克隆与启动
 
 git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git

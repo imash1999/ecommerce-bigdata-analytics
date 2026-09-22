@@ -70,7 +70,9 @@ services:
       - ./scripts/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   spark-master:
-    image: apache/spark:3.5.0
+    build:
+      context: ./scripts/spark
+      dockerfile: Dockerfile
     container_name: spark-master
     environment:
       - SPARK_MODE=master
