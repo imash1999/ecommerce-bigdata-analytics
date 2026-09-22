@@ -32,18 +32,32 @@ Telegram Alerts
 
 部署与运行
 
-先决条件
+# 先决条件
 
 首次构建和运行 Docker 容器之前，需要将所需的 JAR 库下载到 `scripts/spark/` 文件夹：
 
-# 1. AWS / S3 (MinIO) connector
+1. AWS / S3 (MinIO) connector
 curl -fSL [https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar](https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar) -O
 curl -fSL [https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar](https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar) -O
 
-# 2. PostgreSQL JDBC driver
+2. PostgreSQL JDBC driver
 curl -fSL [https://jdbc.postgresql.org/download/postgresql-42.6.0.jar](https://jdbc.postgresql.org/download/postgresql-42.6.0.jar) -O
 
-克隆与启动
+# 设置 Telegram 通知（可选）
+
+要在 Telegram 中接收有关 Airflow DAG 故障和执行状态的通知，请执行以下操作：
+
+1. 使用 [@BotFather](https://t.me/BotFather) 创建一个机器人并获取机器人令牌。
+
+2. 查找您的聊天 ID（例如，使用 [@userinfobot](https://t.me/userinfobot)）。
+
+3. 将获取的数据输入到 `dags/telegram_alerts.py` 文件中：
+
+TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+
+TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"
+
+# 克隆与启动
 
 git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git
 cd ecommerce-bigdata-analytics

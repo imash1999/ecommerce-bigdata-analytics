@@ -2,8 +2,8 @@ import urllib.request
 import json
 import ssl
 
-TELEGRAM_TOKEN = '8597372280:AAE7P0-0u8aNzdUqzYQcjhajwIq4H_dpaHk'
-TELEGRAM_CHAT_ID = '1114691272'
+TELEGRAM_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+TELEGRAM_CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID'
 
 def send_telegram_failure_alert(context):
     dag_id = context.get('task_instance').dag_id
