@@ -20,3 +20,4 @@ spark-warehouse/
 .DS_Store
 Thumbs.db
 *.jar
+*.jar
