@@ -1,0 +1,62 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth" },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawSql": "SELECT window_start AS \"time\", total_revenue AS \"Revenue\" FROM realtime_metrics WHERE $__timeFilter(window_start) ORDER BY window_start ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Real-time Revenue (1m Windows)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth" }
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawSql": "SELECT window_start AS \"time\", total_views AS \"Views\", total_cart_adds AS \"Cart Adds\", total_buys AS \"Buys\" FROM realtime_metrics WHERE $__timeFilter(window_start) ORDER BY window_start ASC;",
+          "refId": "A"
+        }
+      ],
+      "title": "User Events (1m Windows)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["ecommerce"],
+  "time": { "from": "now-30m", "to": "now" },
+  "title": "E-Commerce Real-time Analytics"
+}

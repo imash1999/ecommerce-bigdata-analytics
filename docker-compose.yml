@@ -129,6 +129,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - postgres
+    volumes:
+      - ./scripts/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./scripts/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
 
   airflow-webserver:
     image: apache/airflow:2.7.1-python3.10
