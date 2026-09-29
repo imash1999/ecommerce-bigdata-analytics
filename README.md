@@ -66,18 +66,12 @@ TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"
 ## 克隆与启动
 
 git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git
+
 cd ecommerce-bigdata-analytics
+
 docker compose up -d --build
+
 docker exec -it flink-jobmanager /opt/flink/bin/sql-client.sh -l /opt/flink/usrlib -f /opt/flink/submit.sql
-## 强制刷新 Airflow DAG
-
-若 Web 界面未显示 DAG：
-
-docker exec -it airflow_webserver airflow dags reserialize
-
-## 手动触发任务
-
-docker exec -it airflow_webserver airflow dags trigger rfm_segmentation_daily
 
 ## 访问入口
 
