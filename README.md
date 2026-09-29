@@ -64,7 +64,7 @@ TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
 TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"
 
 ## 克隆与启动
-
+'''bash
 git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git
 
 cd ecommerce-bigdata-analytics
@@ -72,7 +72,7 @@ cd ecommerce-bigdata-analytics
 docker compose up -d --build
 
 docker exec -it flink-jobmanager /opt/flink/bin/sql-client.sh -l /opt/flink/usrlib -f /opt/flink/submit.sql
-
+'''
 ## 访问入口
 
 Airflow: http://localhost:8085
