@@ -1,3 +1,5 @@
+SET 'execution.attached' = 'false';
+
 CREATE TABLE kafka_events (
     event_id STRING,
     user_id STRING,

@@ -43,6 +43,12 @@ curl -fSL [https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12
 2. PostgreSQL JDBC driver
 curl -fSL [https://jdbc.postgresql.org/download/postgresql-42.6.0.jar](https://jdbc.postgresql.org/download/postgresql-42.6.0.jar) -O
 
+3. Flink jar files
+
+curl -fSL https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.0.0-1.17/flink-sql-connector-kafka-3.0.0-1.17.jar -o scripts/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar
+curl -fSL https://repo1.maven.org/maven2/org/apache/flink/flink-connector-jdbc/3.1.0-1.17/flink-connector-jdbc-3.1.0-1.17.jar -o scripts/flink/lib/flink-connector-jdbc-3.1.0-1.17.jar
+curl -fSL https://jdbc.postgresql.org/download/postgresql-42.6.0.jar -o scripts/flink/lib/postgresql-42.6.0.jar
+
 ## 设置 Telegram 通知（可选）
 
 要在 Telegram 中接收有关 Airflow DAG 故障和执行状态的通知，请执行以下操作：

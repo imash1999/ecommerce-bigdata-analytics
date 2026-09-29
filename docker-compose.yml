@@ -105,7 +105,9 @@ services:
       KAFKA_TOPIC: ecommerce-events
 
   flink-processor:
-    image: ecommerce-flink:latest
+    build:
+      context: ./scripts/flink
+    image: ecommerce-flink
     container_name: flink-processor
     depends_on:
       - kafka
@@ -178,15 +180,16 @@ services:
     command: airflow scheduler
 
   minio:
-    image: quay.io/minio/minio:latest
-    container_name: ecommerce-minio
+    image: chrislusf/seaweedfs:4.47
+    container_name: minio
     ports:
       - "9000:9000"
-      - "9001:9001"
+      - "9333:9333"
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadminpassword
-    command: server /data --console-address ":9001"
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin123
+      MINIO_UPDATE_MINFREQDAYS: "0"
+    command: server -s3 -s3.port=9000 -master.volumeSizeLimitMB=100
     volumes:
       - minio_data:/data
 volumes:
