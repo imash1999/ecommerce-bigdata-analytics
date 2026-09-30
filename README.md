@@ -76,9 +76,7 @@ docker compose up -d --build
 docker exec -it flink-jobmanager /opt/flink/bin/sql-client.sh -l /opt/flink/usrlib -f /opt/flink/submit.sql
 ```
 ## 访问入口
-```text
 Airflow: http://localhost:8085
 Grafana: http://localhost:3000
 Flink: http://localhost:8081
-MinIO Console: http://localhost:9001
-```
+
